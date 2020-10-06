@@ -1,0 +1,35 @@
+---
+title: ""
+subtitle: ""
+author: 
+  - .b[Matthew T. Warkentin], MSc. Ph.D (c)
+institute: "Lunenfeld-Tanenbaum Research Institute, .b[.sinai-blue[Sinai] .sinai-orange[Health] .sinai-red[System]]"
+date: 'October 21, 2020'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: 
+      - css/xaringan-theme.css
+      - css/style.css
+    includes:
+      in_header: head.html
+    seal: false
+    nature:
+      titleSlideClass: ["bottom", "left"]
+      slideNumberFormat: "%current%"
+      highlightStyle: atom-one-light
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+      navigation:
+        scroll: false
+---
+
+name: title
+class: left middle hide-count title-bg
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+source("xaringan-theme.R")
+source("packages.R")
+source("setup.R")$value
+```

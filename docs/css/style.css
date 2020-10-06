@@ -1,0 +1,60 @@
+:root {
+  --sinai-blue: rgb(74, 199, 233);
+  --sinai-red: rgb(255, 35, 60);
+  --sinai-orange: rgb(255, 190, 0);
+  --opaque-box-color: rgba(255, 255, 255, 0.9);
+  --remark-font: "Yanone Kaffeesatz";
+}
+
+/* TITLE SLIDE */
+.title-bg {
+  background-image: url();
+  background-size: cover;
+}
+.talk-title {
+  margin-bottom: 80px;
+}
+.talk-subtitle {
+  font-size: 2rem;
+}
+.talk-meta {
+  left: 1rem;
+  width: 100%;
+}
+.talk-author {
+  font-size: 1.5rem;
+}
+.talk-social {
+  font-size: 1.2rem;
+}
+.talk-date {
+  font-size: 1.5rem;
+}
+.sinai-blue {
+  color: var(--sinai-blue);
+}
+.sinai-red {
+  color: var(--sinai-red);
+}
+.sinai-orange {
+  color: var(--sinai-orange);
+}
+
+/* GENERAL STYLING */
+.highlight-last-item > ul > li,
+.highlight-last-item > ol > li {
+  opacity: 0.4;
+}
+.highlight-last-item > ul > li:last-of-type,
+.highlight-last-item > ol > li:last-of-type {
+  opacity: 1;
+}
+.hide-count .remark-slide-number {
+  display: none;
+}
+.bg-white-o90 {
+  background-color: var(--opaque-box-color);
+}
+.remark-font {
+  font-family: var(--remark-font);
+}
