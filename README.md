@@ -1,10 +1,11 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+# Reproducible data analysis pipelines using `targets`
 
-# targets-tutorial
+![](docs/share-card.png)
 
-<!-- badges: start -->
+### Dynamic Function-Oriented Make-Like Declarative Pipelines for R
 
-<!-- badges: end -->
+**Author**: Matthew T. Warkentin (<warkentin@lunenfeld.ca>)
 
-The goal of targets-tutorial is to …
+📺 [**Click to View
+Slides**](https://mattwarkentin.github.io/targets-tutorial/)

@@ -2,8 +2,6 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -11,9 +9,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-# targets-tutorial
+# Reproducible data analysis pipelines using `targets`
 
-<!-- badges: start -->
-<!-- badges: end -->
+![](docs/share-card.png)
 
-The goal of targets-tutorial is to ...
+### Dynamic Function-Oriented Make-Like Declarative Pipelines for R
+
+__Author__: Matthew T. Warkentin (<warkentin@lunenfeld.ca>)
+
+&#x1F4FA; [__Click to View Slides__](https://mattwarkentin.github.io/targets-tutorial/)
