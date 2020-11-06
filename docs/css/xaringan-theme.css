@@ -37,7 +37,7 @@
   --text-font-size: 2rem;
   --code-font-size: 2rem;
   --code-inline-font-size: 1em;
-  --header-h1-font-size: 5rem;
+  --header-h1-font-size: 4.5rem;
   --header-h2-font-size: 4rem;
   --header-h3-font-size: 3rem;
 
@@ -45,7 +45,7 @@
   --text-color: #000;
   --header-color: #000;
   --background-color: #FBFCFF;
-  --link-color: #357EDD;
+  --link-color: rgb(74, 199, 233);
   --code-highlight-color: #F0FFF0;
   --inverse-text-color: #FBFCFF;
   --inverse-background-color: #333333;

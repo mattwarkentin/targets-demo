@@ -1,10 +1,10 @@
 ---
-title: ""
-subtitle: ""
+title: "Reproducible data analysis workflows with targets"
+subtitle: "Dynamic Function-Oriented Make-Like Declarative Pipelines for R"
 author: 
   - .b[Matthew T. Warkentin], MSc. Ph.D (c)
 institute: "Lunenfeld-Tanenbaum Research Institute, .b[.sinai-blue[Sinai] .sinai-orange[Health] .sinai-red[System]]"
-date: 'October 21, 2020'
+date: 'Novemer 12, 2020'
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -32,4 +32,46 @@ class: left middle hide-count title-bg
 source("xaringan-theme.R")
 source("packages.R")
 source("setup.R")$value
+```
+
+```{r title-slide, echo=FALSE, message = FALSE, warning = FALSE}
+htmltools::withTags(
+  div(
+    class = "talk-meta",
+    div(
+      h1(rmarkdown::metadata$title, class = "talk-title"),
+      p(rmarkdown::metadata$subtitle, class = "talk-subtitle")
+    ),
+    div(
+      class = "talk-author", 
+      span(fontawesome::fa('id-badge', fill = '#FFFFFF'), rmarkdown::metadata$author),
+      div(
+        class = "talk-social pl3 pt2 pb2 lh-copy",
+        paste0(
+          div(fontawesome::fa('envelope', fill = '#FFFFFF'),
+            a(href = "mailto:warkentin@lunenfeld.ca",
+              "warkentin@lunenfeld.ca")),
+          div(fontawesome::fa('github', fill = '#FFFFFF'),
+            a(href = "https://github.com/mattwarkentin",
+              "@mattwarkentin")),
+          div(fontawesome::fa('twitter', fill = '#FFFFFF'),
+            a(href = "https://twitter.com/mattwrkntn",
+              "@mattwrkntn")),
+          collapse = "<br/>"
+          )
+        ),
+      span(
+        fontawesome::fa('home', fill = '#FFFFFF'),
+        rmarkdown::metadata$institute
+        )
+    ),
+    div(
+      class = "talk-date",
+      span(
+        fontawesome::fa('calendar-alt', fill = '#FFFFFF'),
+        rmarkdown::metadata$date
+      )
+    )
+  )
+)
 ```

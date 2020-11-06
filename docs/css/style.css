@@ -4,30 +4,39 @@
   --sinai-orange: rgb(255, 190, 0);
   --opaque-box-color: rgba(255, 255, 255, 0.9);
   --remark-font: "Yanone Kaffeesatz";
+  --title-font-color: white;
 }
 
 /* TITLE SLIDE */
 .title-bg {
-  background-image: url();
+  background-image: url(https://images.unsplash.com/photo-1506968430777-bf7784a87f23?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1502&q=80);
   background-size: cover;
 }
 .talk-title {
-  margin-bottom: 80px;
+  color: var(--title-font-color);
+  margin-bottom: 30px;
 }
 .talk-subtitle {
+  color: var(--title-font-color);
+  font-style: italic;
   font-size: 2rem;
+  margin-bottom: 80px;
 }
 .talk-meta {
+  color: var(--title-font-color);
   left: 1rem;
   width: 100%;
 }
 .talk-author {
+  color: var(--title-font-color);
   font-size: 1.5rem;
 }
 .talk-social {
+  color: var(--title-font-color);
   font-size: 1.2rem;
 }
 .talk-date {
+  color: var(--title-font-color);
   font-size: 1.5rem;
 }
 .sinai-blue {
