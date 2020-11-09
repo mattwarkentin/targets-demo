@@ -551,7 +551,7 @@ clean_data <- function(data) {
 
 ---
 
-### `r fontawesome::fa("save")` `{targets}` data store
+### `r fontawesome::fa("save")` Data Store
 
 - After you run your pipeline the first time the data store is created...
 
@@ -560,6 +560,8 @@ clean_data <- function(data) {
 ```r
 *_targets/
 *│   ├── meta/
+*│       ├── meta
+*│       ├── progress
 *│   ├── objects/
 *│       ├── target_name_1
 *│       ├── target_name_2
@@ -569,14 +571,110 @@ clean_data <- function(data) {
 ├── project-name.Rproj
 ```
 
-- It is not recommended to directly interact with the `_targets` directory. Instead, load and inspect the direction using the suite of available helper functions
-  + `tar_read()`/`tar_load()`
-  + `tar_meta()`
-  + Etc.
+- It is not recommended to directly interact with the `_targets` directory. Instead, load and inspect the data store using the suite of available helper functions
 
 ---
 
-### `r fontawesome::fa("robot")` A simple example...
+### `r fontawesome::fa("battery-quarter")` A simple example...
+
+```r
+tar_pipeline(
+  tar_target(
+    data,
+    iris
+  ),
+  tar_target(
+    model,
+    lm(Sepal.Length ~ ., data = data)
+  )
+)
+```
+
+```r
+tar_make()
+```
+```r
+● run target data
+● run target model
+```
+
+---
+
+### `r fontawesome::fa("battery-quarter")` A simple example...
+
+```r
+tar_make()
+```
+
+```r
+✓ skip target data
+✓ skip target model
+✓ Already up to date.
+```
+
+```r
+_targets/
+├── meta
+│   ├── meta
+│   └── progress
+└── objects
+    ├── data
+    └── model
+```
+
+---
+
+```r
+tar_read(data)
+```
+```r
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+ [ reached 'max' / getOption("max.print") -- omitted 148 rows ]
+```
+
+```r
+tar_read(model)
+```
+```r
+Call:
+lm(formula = Sepal.Length ~ ., data = data)
+
+Coefficients:
+      (Intercept)        Sepal.Width       Petal.Length  
+           2.1713             0.4959             0.8292  
+      Petal.Width  Speciesversicolor   Speciesvirginica  
+          -0.3152            -0.7236            -1.0235  
+
+```
+
+---
+
+```r
+tar_pipeline(
+  tar_target(
+    data,
+    iris
+  ),
+  tar_target(
+    model,
+    lm(Sepal.Length ~ ., data = data)
+  ),
+*  tar_target(
+*    summary,
+*    summary(model)
+*  )
+)
+
+tar_make()
+```
+
+```r
+✓ skip target data
+✓ skip target model
+● run target summary
+```
 
 ---
 
@@ -655,6 +753,120 @@ __Iteration__: patterns iterate over targets, and there are two important aspect
 
 ---
 
+### `r fontawesome::fa("battery-three-quarters")` Advanced Example
+
+- We will set up a more advanced example using dynamic branching
+
+- Let's fit a linear model for how life expectancy has change over time for every country in the world
+  + How many countries are in our data set? Not sure, doesn't matter
+  
+- New concept: __dynamic branching__
+
+---
+
+```r
+tar_pipeline(
+  tar_target(
+    gapminder_file,
+    "/Users/matt/Library/R/4.0/library/gapminder/extdata/gapminder.tsv",
+    format = "file"
+  ),
+  tar_target(
+    gapminder,
+    read_tsv(gapminder_file)
+  ),
+  tar_target(
+    country,
+    group_split(gapminder, country),
+    iteration = "list"
+  ),
+  tar_target(
+    model,
+    lm(lifeExp ~ year, data = country),
+    pattern = map(country),
+    iteration = "list"
+  )
+)
+```
+
+---
+
+### `r fontawesome::fa("battery-three-quarters")` Advanced Example
+
+```r
+tar_visnetwork()
+```
+
+```{r echo=FALSE}
+img(src = "imgs/gapminder.png", class = "center")
+```
+
+---
+
+### `r fontawesome::fa("battery-three-quarters")` Advanced Example
+
+```r
+tar_make()
+```
+
+```r
+● run target gapminder_file
+● run target gapminder
+● run target country
+● run branch model_55cab078
+● run branch model_137fa27c
+● run branch model_11168a7a
+● run branch model_4fa278a7
+● run branch model_f0b9128a
+...
+● run branch model_b1ee577e
+● run branch model_af9237c1
+● run branch model_ab0302f4
+● run branch model_0b45f3c6
+● run branch model_f4b18a5b
+```
+
+---
+
+```r
+tar_pipeline(
+  tar_target(
+    gapminder_file,
+    "/Users/matt/Library/R/4.0/library/gapminder/extdata/gapminder.tsv",
+    format = "file"
+  ),
+  tar_target(
+    gapminder,
+    read_tsv(gapminder_file)
+  ),
+  tar_target(
+    country,
+    group_split(gapminder, country),
+    iteration = "list"
+  ),
+  tar_target(
+    model,
+*   lm(lifeExp ~ year + gdpPercap, data = country),
+    pattern = map(country),
+    iteration = "list"
+  )
+)
+```
+
+---
+
+### `r fontawesome::fa("battery-three-quarters")` Advanced Example
+
+```r
+tar_visnetwork(label = c("branches", "time"))
+```
+
+```{r echo=FALSE}
+img(src = "imgs/gapminder2.png", class = "center")
+```
+
+---
+
 ### `r fontawesome::fa("project-diagram")` High-performance Computing
 
 .lh-copy[> `targets` supports high-performance computing with the `tar_make_clustermq()` and `tar_make_future()` functions. These functions are like `tar_make()`, but they allow multiple targets to run simultaneously over parallel workers. These workers can be processes on your local machine, or they can be jobs on a computing cluster. The main process automatically sends a target to a worker as soon as
@@ -691,7 +903,7 @@ targets::tar_make_clustermq(workers = 5)
 
 ### `r fontawesome::fa("project-diagram")` High-performance Computing
 
-- If your project lives on our cluster, you can change the scheduler to `"slurm"`, and `targets` will run the worker processes as jobs on the compute nodes
+- If your project lives on our cluster NFS, you can change the scheduler to `"slurm"`, and `targets` will run the worker processes as jobs on the compute nodes
 
 ```r
 # Add this line to your _targets.R file
@@ -709,7 +921,7 @@ options(
 targets::tar_make_clustermq(workers = 5)
 ```
 
-- Now these worker processes will run on compute nodes (caveat: currently few nodes actually support `ZeroMQ` but this should be made widely available next upgrade)
+- Now these worker processes will run on compute nodes (.i[caveat: currently few nodes actually support `ZeroMQ` but this should be made widely available next upgrade])
 
 ---
 
@@ -737,8 +949,6 @@ CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }
 
 - Seamless integration with AWS/cloud storage capabilities
   + You can store and load objects from AWS S3 buckets as if they existed locally
-  
-- Using the `{future}` backend for parallel computing (I personally prefer the `{clustermq}` backend)
 
 - `targets` offers lots of different storage formats, some of which are faster and more memory efficient
 
