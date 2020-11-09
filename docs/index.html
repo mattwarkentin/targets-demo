@@ -247,22 +247,22 @@ class: center middle hide-count
 --
 
 - .f4[.dark-blue[__Modularity__]
-  + Breaking your tasks into small digestible code chunks makes it easier to debug your code and easier to see how all of the parts fit together]
+  + Breaking tasks into small digestible code chunks makes it easier to debug your code and easier to see how all of the parts fit together]
 
 --
 
 - .f4[.dark-blue[__Transparency and Reproducibility__]
-  + Out of the box, you get a transparent data analysis workflow which is easily reproducible]
+  + Out of the box, you get a transparent and reproducible data analysis workflow]
 
 --
 
 - .f4[.dark-blue[__Caching and History__]
-  + Re-running code that doesn't change is tedious and time-consuming. Caching results means you only run whats absolutely necessary to get up-to-date-results]
+  + Re-running code that doesn't change often is tedious and time-consuming. Caching results means you only run what is absolutely necessary to get up-to-date results]
 
 --
 
 - .f4[.dark-blue[__Scalability and Parallel Computing__]
-  + Mental models of projects break down at scale. Building projects as workflows scales well and easily facilitates parallel computing]
+  + Mental models of projects break down at scale. Building projects as workflows scales well and facilitates parallel computing]
 
 ---
 
@@ -406,7 +406,29 @@ tar_pipeline(...)
 
 - `tar_pipeline()` simply accepts an arbitrary number of `tar_target()` objects, or a list thereof.
 
---
+.o-0[
+Example:
+
+```r
+tar_pipeline(
+  tar_target(first, f1()),
+  tar_target(second, f2()),
+  tar_target(third, f3(first, second))
+)
+```
+
+- .b[Note:] The order of targets inside `tar_pipeline()` does NOT matter. `{targets}` is smart enough to infer the topology and learn dependencies
+]
+
+---
+
+class: middle
+
+```r
+tar_pipeline(...)
+```
+
+- `tar_pipeline()` simply accepts an arbitrary number of `tar_target()` objects, or a list thereof.
 
 Example:
 
@@ -464,7 +486,7 @@ data/
 
 - Building your plan
 
-  + A `{targets}` plan is a __directed acyclic graph__ that describes all of the tasks that need to be done and the interrelationships between these tasks
+  + A `{targets}` pipeline is a __directed acyclic graph__ (DAG) showing all of the tasks (nodes) and their interrelationships (vertices)
 
 ---
 
@@ -785,7 +807,9 @@ tar_pipeline(
 
 &gt; The `targets` packages supports shorthand to create large pipelines. Dynamic branching defines new targets (i.e. branches) while the pipeline is running, and those definitions can be based on prior results from upstream targets.
 
-__Patterns:__ Creates .i.blue[branches] based on combinations of arguments
+--
+
+.b[Patterns:] Creates .i.blue[branches] by iterating over function arguments
 
 ```r
 # Draws from random Normal
@@ -801,7 +825,7 @@ tar_pipeline(
 
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 384 512"&gt;&lt;path d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06 3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61 3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26 3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25 3.8-8.17 2.44-17.47-3.56-24.26z"/&gt;&lt;/svg&gt; Dynamic branching
 
-__Iteration__: patterns iterate over targets, and there are two important aspects of iteration...
+__Iteration__: patterns iterate over arguments (e.g. using `map()`), and there are two important aspects of iteration...
 
 1. Branching
   + This tells `targets` how to iterate (or create branches) based on the data
@@ -844,7 +868,7 @@ tar_pipeline(
   ),
   tar_target(
     country,
-    group_split(gapminder, country),
+    group_split(gapminder, country), # returns a list of data frames
     iteration = "list"
   ),
   tar_target(
@@ -931,6 +955,35 @@ tar_visnetwork(label = c("branches", "time"))
 
 ---
 
+### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 640 512"&gt;&lt;path d="M544 160v64h32v64h-32v64H64V160h480m16-64H48c-26.51 0-48 21.49-48 48v224c0 26.51 21.49 48 48 48h512c26.51 0 48-21.49 48-48v-16h8c13.255 0 24-10.745 24-24V184c0-13.255-10.745-24-24-24h-8v-16c0-26.51-21.49-48-48-48zm-144 96H96v128h320V192z"/&gt;&lt;/svg&gt; Advanced Example
+
+```r
+# _targets.R
+options(clustermq.scheduler = "multiprocess")
+```
+
+```r
+tar_make_clustermq(workers = 6)
+```
+
+--
+
+```r
+● run target gapminder_file
+● run target gapminder
+● run target country
+● run branch model_55cab078
+● run branch model_137fa27c
+● run branch model_11168a7a
+...
+● run branch model_ab0302f4
+● run branch model_0b45f3c6
+● run branch model_f4b18a5b
+Master: [12.1s 75.5% CPU]; Worker: [avg 19.9% CPU, max 8387926.0 Mb]
+```
+
+---
+
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 640 512"&gt;&lt;path d="M384 320H256c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V352c0-17.67-14.33-32-32-32zM192 32c0-17.67-14.33-32-32-32H32C14.33 0 0 14.33 0 32v128c0 17.67 14.33 32 32 32h95.72l73.16 128.04C211.98 300.98 232.4 288 256 288h.28L192 175.51V128h224V64H192V32zM608 0H480c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V32c0-17.67-14.33-32-32-32z"/&gt;&lt;/svg&gt; High-performance Computing
 
 .lh-copy[&gt; `targets` supports high-performance computing with the `tar_make_clustermq()` and `tar_make_future()` functions. These functions are like `tar_make()`, but they allow multiple targets to run simultaneously over parallel workers. These workers can be processes on your local machine, or they can be jobs on a computing cluster. The main process automatically sends a target to a worker as soon as
@@ -958,7 +1011,7 @@ options(clustermq.scheduler = "multiprocess")
 
 ```r
 # Instead of tar_make()
-targets::tar_make_clustermq(workers = 5)
+targets::tar_make_clustermq(workers = 6)
 ```
 
 - Keep in mind, these multiple persistent `R` processes are running locally, so a good rule-of-thumb is the number of processes should always be less than or equal to the number of available cores
@@ -967,7 +1020,7 @@ targets::tar_make_clustermq(workers = 5)
 
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 640 512"&gt;&lt;path d="M384 320H256c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V352c0-17.67-14.33-32-32-32zM192 32c0-17.67-14.33-32-32-32H32C14.33 0 0 14.33 0 32v128c0 17.67 14.33 32 32 32h95.72l73.16 128.04C211.98 300.98 232.4 288 256 288h.28L192 175.51V128h224V64H192V32zM608 0H480c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V32c0-17.67-14.33-32-32-32z"/&gt;&lt;/svg&gt; High-performance Computing
 
-- If your project lives on our cluster NFS, you can change the scheduler to `"slurm"`, and `targets` will run the worker processes as jobs on the compute nodes
+- If your project lives on our cluster NFS, you can change the scheduler to `"slurm"`, and `targets` will run the worker processes as jobs on compute nodes
 
 ```r
 # Add this line to your _targets.R file
@@ -982,10 +1035,10 @@ options(
 --
 
 ```r
-targets::tar_make_clustermq(workers = 5)
+targets::tar_make_clustermq(workers = 6)
 ```
 
-- Now these worker processes will run on compute nodes (.i[caveat: currently few nodes actually support `ZeroMQ` but this should be made widely available next upgrade])
+- Now these worker processes will run on compute nodes (.i[caveat: currently few nodes support `ZeroMQ` socket communication but this should be widely available next upgrade])
 
 ---
 
@@ -1044,9 +1097,9 @@ CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }
   + Author of `clustermq`
 ]
 &lt;br&gt;&lt;br&gt;&lt;br&gt;
-.ba.pa3.br3.bg-yellow.f4.center[.b[Kohn's Second Law:] An experiment is reproducible until another laboratory tries to repeat it]
+.ba.pa3.br3.bg-yellow.f4.center.shadow-5[.b[Kohn's Second Law:] An experiment is reproducible until another laboratory tries to repeat it]
 &lt;br&gt;&lt;br&gt;
-.ba.pa3.br3.bg-light-green.f4.center[.b[Matt's Second Law:] A statistical analysis is reproducible until you try to re-run it ~~years~~ days later]
+.ba.pa3.br3.bg-light-green.f4.center.shadow-5[.b[Matt's Second Law:] A statistical analysis is reproducible until you try to re-run it ~~years~~ days later]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

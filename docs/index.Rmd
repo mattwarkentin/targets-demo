@@ -230,22 +230,22 @@ img(src = "imgs/4lp7k8.jpg", class = "drake-meme")
 --
 
 - .f4[.dark-blue[__Modularity__]
-  + Breaking your tasks into small digestible code chunks makes it easier to debug your code and easier to see how all of the parts fit together]
+  + Breaking tasks into small digestible code chunks makes it easier to debug your code and easier to see how all of the parts fit together]
 
 --
 
 - .f4[.dark-blue[__Transparency and Reproducibility__]
-  + Out of the box, you get a transparent data analysis workflow which is easily reproducible]
+  + Out of the box, you get a transparent and reproducible data analysis workflow]
 
 --
 
 - .f4[.dark-blue[__Caching and History__]
-  + Re-running code that doesn't change is tedious and time-consuming. Caching results means you only run whats absolutely necessary to get up-to-date-results]
+  + Re-running code that doesn't change often is tedious and time-consuming. Caching results means you only run what is absolutely necessary to get up-to-date results]
 
 --
 
 - .f4[.dark-blue[__Scalability and Parallel Computing__]
-  + Mental models of projects break down at scale. Building projects as workflows scales well and easily facilitates parallel computing]
+  + Mental models of projects break down at scale. Building projects as workflows scales well and facilitates parallel computing]
 
 ---
 
@@ -391,7 +391,29 @@ tar_pipeline(...)
 
 - `tar_pipeline()` simply accepts an arbitrary number of `tar_target()` objects, or a list thereof.
 
---
+.o-0[
+Example:
+
+```r
+tar_pipeline(
+  tar_target(first, f1()),
+  tar_target(second, f2()),
+  tar_target(third, f3(first, second))
+)
+```
+
+- .b[Note:] The order of targets inside `tar_pipeline()` does NOT matter. `{targets}` is smart enough to infer the topology and learn dependencies
+]
+
+---
+
+class: middle
+
+```r
+tar_pipeline(...)
+```
+
+- `tar_pipeline()` simply accepts an arbitrary number of `tar_target()` objects, or a list thereof.
 
 Example:
 
@@ -449,7 +471,7 @@ data/
 
 - Building your plan
 
-  + A `{targets}` plan is a __directed acyclic graph__ that describes all of the tasks that need to be done and the interrelationships between these tasks
+  + A `{targets}` pipeline is a __directed acyclic graph__ (DAG) showing all of the tasks (nodes) and their interrelationships (vertices)
 
 ---
 
@@ -770,7 +792,9 @@ tar_pipeline(
 
 > The `targets` packages supports shorthand to create large pipelines. Dynamic branching defines new targets (i.e. branches) while the pipeline is running, and those definitions can be based on prior results from upstream targets.
 
-__Patterns:__ Creates .i.blue[branches] based on combinations of arguments
+--
+
+.b[Patterns:] Creates .i.blue[branches] by iterating over function arguments
 
 ```r
 # Draws from random Normal
@@ -786,7 +810,7 @@ tar_pipeline(
 
 ### `r fontawesome::fa("tree")` Dynamic branching
 
-__Iteration__: patterns iterate over targets, and there are two important aspects of iteration...
+__Iteration__: patterns iterate over arguments (e.g. using `map()`), and there are two important aspects of iteration...
 
 1. Branching
   + This tells `targets` how to iterate (or create branches) based on the data
@@ -829,7 +853,7 @@ tar_pipeline(
   ),
   tar_target(
     country,
-    group_split(gapminder, country),
+    group_split(gapminder, country), # returns a list of data frames
     iteration = "list"
   ),
   tar_target(
@@ -920,6 +944,35 @@ img(src = "imgs/gapminder2.png", class = "w-100 center")
 
 ---
 
+### `r fontawesome::fa("battery-three-quarters")` Advanced Example
+
+```r
+# _targets.R
+options(clustermq.scheduler = "multiprocess")
+```
+
+```r
+tar_make_clustermq(workers = 6)
+```
+
+--
+
+```r
+● run target gapminder_file
+● run target gapminder
+● run target country
+● run branch model_55cab078
+● run branch model_137fa27c
+● run branch model_11168a7a
+...
+● run branch model_ab0302f4
+● run branch model_0b45f3c6
+● run branch model_f4b18a5b
+Master: [12.1s 75.5% CPU]; Worker: [avg 19.9% CPU, max 8387926.0 Mb]
+```
+
+---
+
 ### `r fontawesome::fa("project-diagram")` High-performance Computing
 
 .lh-copy[> `targets` supports high-performance computing with the `tar_make_clustermq()` and `tar_make_future()` functions. These functions are like `tar_make()`, but they allow multiple targets to run simultaneously over parallel workers. These workers can be processes on your local machine, or they can be jobs on a computing cluster. The main process automatically sends a target to a worker as soon as
@@ -947,7 +1000,7 @@ options(clustermq.scheduler = "multiprocess")
 
 ```r
 # Instead of tar_make()
-targets::tar_make_clustermq(workers = 5)
+targets::tar_make_clustermq(workers = 6)
 ```
 
 - Keep in mind, these multiple persistent `R` processes are running locally, so a good rule-of-thumb is the number of processes should always be less than or equal to the number of available cores
@@ -956,7 +1009,7 @@ targets::tar_make_clustermq(workers = 5)
 
 ### `r fontawesome::fa("project-diagram")` High-performance Computing
 
-- If your project lives on our cluster NFS, you can change the scheduler to `"slurm"`, and `targets` will run the worker processes as jobs on the compute nodes
+- If your project lives on our cluster NFS, you can change the scheduler to `"slurm"`, and `targets` will run the worker processes as jobs on compute nodes
 
 ```r
 # Add this line to your _targets.R file
@@ -971,10 +1024,10 @@ options(
 --
 
 ```r
-targets::tar_make_clustermq(workers = 5)
+targets::tar_make_clustermq(workers = 6)
 ```
 
-- Now these worker processes will run on compute nodes (.i[caveat: currently few nodes actually support `ZeroMQ` but this should be made widely available next upgrade])
+- Now these worker processes will run on compute nodes (.i[caveat: currently few nodes support `ZeroMQ` socket communication but this should be widely available next upgrade])
 
 ---
 
@@ -1033,6 +1086,6 @@ CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }
   + Author of `clustermq`
 ]
 <br><br><br>
-.ba.pa3.br3.bg-yellow.f4.center[.b[Kohn's Second Law:] An experiment is reproducible until another laboratory tries to repeat it]
+.ba.pa3.br3.bg-yellow.f4.center.shadow-5[.b[Kohn's Second Law:] An experiment is reproducible until another laboratory tries to repeat it]
 <br><br>
-.ba.pa3.br3.bg-light-green.f4.center[.b[Matt's Second Law:] A statistical analysis is reproducible until you try to re-run it ~~years~~ days later]
+.ba.pa3.br3.bg-light-green.f4.center.shadow-5[.b[Matt's Second Law:] A statistical analysis is reproducible until you try to re-run it ~~years~~ days later]
