@@ -17,4 +17,4 @@ knitr::opts_chunk$set(
 
 __Author__: Matthew T. Warkentin (<warkentin@lunenfeld.ca>)
 
-&#x1F4FA; [__Click to View Slides__](https://mattwarkentin.github.io/targets-tutorial/)
+&#x1F4FA; [__Click to View Slides__](https://mattwarkentin.github.io/targets-demo/)
