@@ -1,5 +1,5 @@
 ---
-title: "Reproducible data analysis workflows with targets"
+title: "Reproducible and scalable data analysis workflows with targets"
 subtitle: "Dynamic Function-Oriented Make-Like Declarative Pipelines for R"
 author: 
   - .b[Matthew T. Warkentin], MSc. Ph.D (c)
@@ -75,3 +75,65 @@ htmltools::withTags(
   )
 )
 ```
+
+---
+
+class: lh-copy
+
+## What is `{targets}`?
+
+.pull-left[
+- `{targets}` is a project workflow tool that is very `R`-centric
+  + Similar tools exist for other languages, such as `{GNU make}` and `{snakemake}`
+  + `{drake}` was the predecessor to `{targets}` from from same author
+
+- It allows you to effectively modularize your data analysis projects to create obvious and reproducible workflows
+
+- Can easily extend your workflow to massively parallelize tasks
+  + With some setup can use external compute resources (_e.g._ HPC) as a computational back-end for your pipeline
+]
+
+```{r echo=FALSE}
+htmltools::img(src = "imgs/targets.png", id = "targets-pic")
+```
+
+---
+
+What about `{drake}`?
+
+---
+
+## Why should I use `{targets}`?
+
+- .dark-blue[__Organization__]
+  + Explicitly building your projects as an end-to-end workflow can help keep your project more organized and focused (_i.e._ less interactive exploration)
+
+--
+
+- .dark-blue[__Modularity__]
+  + Breaking your tasks into small digestible code chunks makes it easier to debug your code and easier to see how all of the parts fit together
+
+--
+
+- .dark-blue[__Transparency and Reproducibility__]
+  + Out of the box, you get a transparent data analysis workflow which is easily reproducible 
+
+--
+
+- .dark-blue[__Caching and History__]
+  + Re-running code that doesn't change is tedious and time-consuming. Caching results means you only run whats absolutely necessary to get up-to-date-results
+
+--
+
+- .dark-blue[__Scalability and Parallel Computing__]
+  + Mental models of projects break down at scale. Building projects as workflows scales well and easily facilitates parallel computing
+
+
+---
+
+## `{targets}` etymology
+
+---
+
+
+https://wlandau.github.io/targets/

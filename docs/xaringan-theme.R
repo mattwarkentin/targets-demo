@@ -27,8 +27,8 @@ style_xaringan(
 
   # Font Sizes
   base_font_size = "16px",
-  text_font_size = "2rem",
-  code_font_size = "2rem",
+  text_font_size = "1.5rem",
+  code_font_size = "1.5rem",
   header_h1_font_size = "4.5rem",
   header_h2_font_size = "4rem",
   header_h3_font_size = "3rem",

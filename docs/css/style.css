@@ -67,3 +67,8 @@
 .remark-font {
   font-family: var(--remark-font);
 }
+#targets-pic {
+  position: absolute;
+  right: 60px;
+  top: 80px;
+}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Reproducible data analysis workflows with targets</title>
+    <title>Reproducible and scalable data analysis workflows with targets</title>
     <meta charset="utf-8" />
     <meta name="author" content=".b[Matthew T. Warkentin], MSc. Ph.D (c)" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -33,7 +33,7 @@
     <meta name="twitter:title" content="Reproducible data analysis workflows with `targets`"/>
     <meta name="twitter:description" content=""/>
     <meta name="twitter:url" content="https://mattwarkentin.github.io/targets-tutorial"/>
-    <meta name="twitter:image:src" content=""/>
+    <meta name="twitter:image:src" content="https://github.com/mattwarkentin/targets-tutorial/blob/master/docs/share-card.png?raw=true"/>
     <meta name="twitter:image:alt" content="Title slide for the talk titled Reproducible data analysis workflows with `targets`"/>
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:creator" content="@mattwrkntn"/>
@@ -41,7 +41,7 @@
     <meta property="og:title" content="Reproducible data analysis workflows with `targets`"/>
     <meta property="og:description" content=""/>
     <meta property="og:url" content="https://mattwarkentin.github.io/targets-tutorial"/>
-    <meta property="og:image" content=""/>
+    <meta property="og:image" content="https://github.com/mattwarkentin/targets-tutorial/blob/master/docs/share-card.png?raw=true"/>
     <meta property="og:image:alt" content="Title slide for the talk titled Reproducible data analysis workflows with `targets`"/>
     <meta property="og:type" content="website"/>
     <meta property="og:locale" content="en_US"/>
@@ -70,7 +70,7 @@ class: left middle hide-count title-bg
 
 <div class="talk-meta">
 <div>
-<h1 class="talk-title">Reproducible data analysis workflows with targets</h1>
+<h1 class="talk-title">Reproducible and scalable data analysis workflows with targets</h1>
 <p class="talk-subtitle">Dynamic Function-Oriented Make-Like Declarative Pipelines for R</p>
 </div>
 <div class="talk-author">
@@ -100,6 +100,66 @@ Novemer 12, 2020
 </span>
 </div>
 </div>
+
+---
+
+class: lh-copy
+
+## What is `{targets}`?
+
+.pull-left[
+- `{targets}` is a project workflow tool that is very `R`-centric
+  + Similar tools exist for other languages, such as `{GNU make}` and `{snakemake}`
+  + `{drake}` was the predecessor to `{targets}` from from same author
+
+- It allows you to effectively modularize your data analysis projects to create obvious and reproducible workflows
+
+- Can easily extend your workflow to massively parallelize tasks
+  + With some setup can use external compute resources (_e.g._ HPC) as a computational back-end for your pipeline
+]
+
+<img src="imgs/targets.png" id="targets-pic"/>
+
+---
+
+What about `{drake}`?
+
+---
+
+## Why should I use `{targets}`?
+
+- .dark-blue[__Organization__]
+  + Explicitly building your projects as an end-to-end workflow can help keep your project more organized and focused (_i.e._ less interactive exploration)
+
+--
+
+- .dark-blue[__Modularity__]
+  + Breaking your tasks into small digestible code chunks makes it easier to debug your code and easier to see how all of the parts fit together
+
+--
+
+- .dark-blue[__Transparency and Reproducibility__]
+  + Out of the box, you get a transparent data analysis workflow which is easily reproducible 
+
+--
+
+- .dark-blue[__Caching and History__]
+  + Re-running code that doesn't change is tedious and time-consuming. Caching results means you only run whats absolutely necessary to get up-to-date-results
+
+--
+
+- .dark-blue[__Scalability and Parallel Computing__]
+  + Mental models of projects break down at scale. Building projects as workflows scales well and easily facilitates parallel computing
+
+
+---
+
+## `{targets}` etymology
+
+---
+
+
+https://wlandau.github.io/targets/
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
