@@ -50,7 +50,7 @@ htmltools::tagList(
     meta_social(
       title = "Reproducible and scalable data analysis workflows with targets",
       url = "https://mattwarkentin.github.io/targets-tutorial",
-      image = "https://github.com/mattwarkentin/targets-tutorial/blob/master/docs/share-card.png?raw=true",
+      image = "https://github.com/mattwarkentin/targets-demo/blob/master/docs/share-card.png?raw=true",
       image_alt = "Title slide for the talk titled Reproducible and scalable data analysis workflows with targets",
       og_type = "website",
       og_author = "Matthew T. Warkentin",

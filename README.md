@@ -8,4 +8,4 @@
 **Author**: Matthew T. Warkentin (<warkentin@lunenfeld.ca>)
 
 📺 [**Click to View
-Slides**](https://mattwarkentin.github.io/targets-tutorial/)
+Slides**](https://mattwarkentin.github.io/targets-demo/)
