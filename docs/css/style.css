@@ -67,9 +67,41 @@
 .remark-font {
   font-family: var(--remark-font);
 }
-#targets-pic {
+.targets-pic {
   position: absolute;
   width: 250px;
   right: 200px;
-  bottom: 40px;
+  bottom: 50px;
+}
+.mover {
+  animation: move-logo 1s ease-in-out 0s 1 forwards;
+}
+@keyframes move-logo {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  100% {
+    transform: translate(-350px, -380px) scale(0.5);
+  }
+}
+.appear {
+  opacity: 0;
+  animation: appear 1s linear 500ms 1 forwards;
+}
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.drake-pic {
+  position: absolute;
+  width: 250px;
+  right: 250px;
+  bottom: 50px;
+}
+.drake-meme {
+  width: 625px;
 }

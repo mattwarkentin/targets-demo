@@ -128,6 +128,31 @@ Authors@R: c(
 
 ---
 
+```r
+Package: targets
+Title: Dynamic Function-Oriented 'Make'-Like Declarative Workflows
+Description: The 'targets' package is a pipeline toolkit...
+Authors@R: c(
+  person(
+    given = c("William", "Michael"),
+    family = "Landau",
+    role = c("aut", "cre"),
+    email = "will.landau@gmail.com",
+    comment = c(ORCID = "0000-0003-1878-3253")
+  ),
+* person(
+*   given = c("Matthew", "T."),
+*   family = "Warkentin",
+*   role = "ctb"
+* ),
+  person(
+    family = "Eli Lilly and Company",
+    role = "cph"
+  ))
+```
+
+---
+
 .w-90.ba.b--gray-4.br2.pv2.ph3.mv5.shadow-4.absolute.animated.lightSpeedIn[
 .f4[From: Lepore, Mauro]  
 .f4[Subject: Would you be willing to review a package for rOpenSci?]  
@@ -154,13 +179,23 @@ Mauro
 
 class: lh-copy
 
+<img src="imgs/targets.png" class="targets-pic"/>
+
 ### What is `{targets}`?
 
-&gt; .f5[The `targets` package is a Make-like pipeline toolkit for Statistics and data science in R. With `targets`, you can maintain a reproducible workflow without repeating yourself. `targets` learns how your pipeline fits together, skips costly runtime for tasks that are already up to date, runs only the necessary computation, supports implicit parallel computing, abstracts files as R objects, and shows tangible evidence that the results match the underlying code and data.]
+&gt; .f4[The `targets` package is a Make-like pipeline toolkit for Statistics and data science in R. With `targets`, you can maintain a reproducible workflow without repeating yourself. `targets` learns how your pipeline fits together, skips costly runtime for tasks that are already up to date, runs only the necessary computation, supports implicit parallel computing, abstracts files as R objects, and shows tangible evidence that the results match the underlying code and data.]
 
---
+---
 
-.f4.w-60[
+class: lh-copy
+
+<img src="imgs/targets.png" class="targets-pic mover"/>
+
+### What is `{targets}`?
+
+&gt; .f4[The `targets` package is a Make-like pipeline toolkit for Statistics and data science in R. With `targets`, you can maintain a reproducible workflow without repeating yourself. `targets` learns how your pipeline fits together, skips costly runtime for tasks that are already up to date, runs only the necessary computation, supports implicit parallel computing, abstracts files as R objects, and shows tangible evidence that the results match the underlying code and data.]
+
+.f4.appear[
 - `{targets}` is a project workflow tool that is very `R`-centric
   + Similar tools exist for other languages, such as `{GNU make}` and `{snakemake}`
 
@@ -170,9 +205,9 @@ class: lh-copy
   + With some setup can use external compute resources (_e.g._ HPC) as a computational back-end for your pipeline
 ]
 
-<img src="imgs/targets.png" id="targets-pic"/>
-
 ---
+
+<img src="imgs/drake.svg" class="drake-pic"/>
 
 ### What about `{drake}`?
 
@@ -194,13 +229,13 @@ class: lh-copy
 
 - Domain specific
 ]
-.fr.f4.gray[See the [Statement of Need](https://wlandau.github.io/targets/articles/need.html) for details.]
+.f4.gray.fr[See the [Statement of Need](https://wlandau.github.io/targets/articles/need.html) for details.]
 
 ---
 
 class: center middle hide-count
 
-<img src="imgs/4lp7k8.jpg" class="w-50"/>
+<img src="imgs/4lp7k8.jpg" class="drake-meme"/>
 
 ---
 
@@ -237,9 +272,11 @@ class: center middle hide-count
 
 ---
 
+class: lh-copy
+
 ### Using `{targets}`
 
-- All functions in `{targets}` are prefixed by `tar_*`, which makes it easy to work with the package due to low cognitive burden
+- All functions in `{targets}` are prefixed by `tar_*`, which makes it easy to work with the package due to low cognitive friction
 
 --
 
@@ -255,7 +292,7 @@ class: center middle hide-count
 
 --
 
-  - `tar_make()` - This function will analyze your code/pipeline to understand the dependencies, and build the pipeline in a separate clean `R` session
+  - `tar_make()` - Analyzes your code/pipeline to understand the dependencies, and builds the pipeline in a separate clean `R` session
 
 ---
 
@@ -287,17 +324,16 @@ tar_target(
 
 class: middle
 
-
 ```r
 tar_target(
 * name,
 * command,
-  pattern = NULL,
+* pattern = NULL,
   tidy_eval = targets::tar_option_get("tidy_eval"),
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
-  format = targets::tar_option_get("format"),
-  iteration = targets::tar_option_get("iteration"),
+* format = targets::tar_option_get("format"),
+* iteration = targets::tar_option_get("iteration"),
   error = targets::tar_option_get("error"),
   memory = targets::tar_option_get("memory"),
   garbage_collection = targets::tar_option_get("garbage_collection"),
@@ -462,6 +498,10 @@ find_lung_cancers(ukb, "C34")
 
 - Everyone has their own preferred way of organizing their files and projects. This is only a suggested way based on my workflow using `{targets}` for building `R`-centric projects
 
+However,
+
+- `_targets.R` must exist at the root of the project
+
 ```r
 ├── R/
 │   ├── functions.R
@@ -470,11 +510,9 @@ find_lung_cancers(ukb, "C34")
 ├── project-name.Rproj
 ```
 
+--
+
 - A more mature project will likely have many more subdirectories and files, but this serves as the skeleton for most/all of my `{targets}` projects
-
-However,
-
-- `_targets.R` and `_targets/` must exist at the root of the project
 
 ---
 
@@ -538,7 +576,9 @@ class: middle
 │   ├── build-report.R
 ```
 
-- I find it best to have one script per function/task; name the script the name of the function it contains
+- I suggest having one script per function/task
+
+- Name the script the name of the function it contains
 
 ---
 
@@ -591,7 +631,7 @@ clean_data &lt;- function(data) {
 ├── project-name.Rproj
 ```
 
-- It is not recommended to directly interact with the `_targets` directory. Instead, load and inspect the data store using the suite of available helper functions
+- It is NOT recommended to directly interact with the `_targets` directory. Instead, load and inspect the data store using the suite of available helper functions
 
 ---
 
@@ -609,6 +649,8 @@ tar_pipeline(
   )
 )
 ```
+
+--
 
 ```r
 tar_make()
@@ -631,6 +673,8 @@ tar_make()
 ✓ skip target model
 ✓ Already up to date.
 ```
+
+A look at the data store...
 
 ```r
 _targets/
@@ -701,7 +745,7 @@ tar_make()
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 384 512"&gt;&lt;path d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"/&gt;&lt;/svg&gt; Depending on external files
 
 - Sometimes your pipeline might need to look outward and depend on "external" files
-  + A common example is depending on a CSV or Excel file
+  + A common example is depending on a CSV/Excel or PLINK file
 
 --
 
@@ -777,14 +821,17 @@ __Iteration__: patterns iterate over targets, and there are two important aspect
 
 - We will set up a more advanced example using dynamic branching
 
-- Let's fit a linear model for how life expectancy has change over time for every country in the world
-  + How many countries are in our data set? Not sure, doesn't matter
-  
+- Let's fit a model for how life expectancy has changed over time for every country in the `gapminder` data set
+  + How many countries are in our data set? Not sure and it doesn't matter
+
+`$$lifeExpectancy = time + \epsilon$$`  
+
 - New concept: __dynamic branching__
 
 ---
 
 ```r
+# _targets.R
 tar_pipeline(
   tar_target(
     gapminder_file,
@@ -817,7 +864,7 @@ tar_pipeline(
 tar_visnetwork()
 ```
 
-<img src="imgs/gapminder.png" class="center"/>
+<img src="imgs/gapminder.png" class="w-100 center"/>
 
 ---
 
@@ -847,6 +894,7 @@ tar_make()
 ---
 
 ```r
+# _targets.R
 tar_pipeline(
   tar_target(
     gapminder_file,
@@ -879,7 +927,7 @@ tar_pipeline(
 tar_visnetwork(label = c("branches", "time"))
 ```
 
-<img src="imgs/gapminder2.png" class="center"/>
+<img src="imgs/gapminder2.png" class="w-100 center"/>
 
 ---
 
