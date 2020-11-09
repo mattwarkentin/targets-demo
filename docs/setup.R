@@ -41,7 +41,7 @@ htmltools::tagList(
   ),
   meta() %>%
     meta_general(
-      description = "",
+      description = "Reproducible and scalable data analysis workflows with targets",
       generator = "xaringan and remark.js"
     ) %>%
     meta_name(

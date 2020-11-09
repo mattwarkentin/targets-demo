@@ -1,5 +1,5 @@
 
-# Reproducible data analysis pipelines using `targets`
+# Reproducible and scalable data analysis workflows with targets
 
 ![](docs/share-card.png)
 
