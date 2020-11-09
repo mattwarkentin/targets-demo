@@ -69,6 +69,7 @@
 }
 #targets-pic {
   position: absolute;
-  right: 60px;
-  top: 80px;
+  width: 250px;
+  right: 200px;
+  bottom: 40px;
 }

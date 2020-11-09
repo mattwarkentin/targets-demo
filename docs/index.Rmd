@@ -78,14 +78,66 @@ htmltools::withTags(
 
 ---
 
+```r
+Package: targets
+Title: Dynamic Function-Oriented 'Make'-Like Declarative Workflows
+Description: The 'targets' package is a pipeline toolkit...
+Authors@R: c(
+  person(
+    given = c("William", "Michael"),
+    family = "Landau",
+    role = c("aut", "cre"),
+    email = "will.landau@gmail.com",
+    comment = c(ORCID = "0000-0003-1878-3253")
+  ),
+  person(
+    given = c("Matthew", "T."),
+    family = "Warkentin",
+    role = "ctb"
+  ),
+  person(
+    family = "Eli Lilly and Company",
+    role = "cph"
+  ))
+```
+
+---
+
+.w-90.ba.b--gray-4.br2.pv2.ph3.mv5.shadow-4.absolute.animated.lightSpeedIn[
+.f4[From: Lepore, Mauro]  
+.f4[Subject: Would you be willing to review a package for rOpenSci?]  
+.f4[To: <warkentin@lunenfeld.ca>]
+
+***
+
+.f4[Dear Matthew,
+
+Hi, this is Mauro . I hope you and your loved ones are safe. __I'm writing to ask if you would be willing to review a package for rOpenSci.__ As you probably know, rOpenSci conducts peer review of R packages contributed to our collection in a manner similar to journals.
+
+__The package targets by Will Landau provides make-like pipelines for R.__ targets supersedes drake, and is submitted to rOpenSci jointly with the package tarchetypes. You can find targets and tarchetypes on GitHub here and here. We conduct our open review process via GitHub as well.
+
+.f2[...]
+
+Thank you for your time.
+
+Sincerely,
+Mauro
+]
+]
+
+---
+
 class: lh-copy
 
-## What is `{targets}`?
+### What is `{targets}`?
 
-.pull-left[
+> .f5[The `targets` package is a Make-like pipeline toolkit for Statistics and data science in R. With `targets`, you can maintain a reproducible workflow without repeating yourself. `targets` learns how your pipeline fits together, skips costly runtime for tasks that are already up to date, runs only the necessary computation, supports implicit parallel computing, abstracts files as R objects, and shows tangible evidence that the results match the underlying code and data.]
+
+--
+
+.f4.w-60[
 - `{targets}` is a project workflow tool that is very `R`-centric
   + Similar tools exist for other languages, such as `{GNU make}` and `{snakemake}`
-  + `{drake}` was the predecessor to `{targets}` from from same author
 
 - It allows you to effectively modularize your data analysis projects to create obvious and reproducible workflows
 
@@ -99,41 +151,625 @@ htmltools::img(src = "imgs/targets.png", id = "targets-pic")
 
 ---
 
-What about `{drake}`?
+### What about `{drake}`?
+
+> The `drake` package is an older and more established R-focused pipeline toolkit. It is has become a key piece of the R ecosystem, and development and support will continue.
+
+> The `targets` package borrows from past learnings, user suggestions, discussions, complaints, success stories, and feature requests, and it improves the user experience in ways that will never be possible in `drake`.
+
+--
+
+`targets` is more...
+.f4[
+- Efficient
+
+- Reproducible
+
+- Maintainable
+
+- Portable
+
+- Domain specific
+]
+.fr.f4.gray[See the [Statement of Need](https://wlandau.github.io/targets/articles/need.html) for details.]
 
 ---
 
-## Why should I use `{targets}`?
+class: center middle hide-count
 
-- .dark-blue[__Organization__]
-  + Explicitly building your projects as an end-to-end workflow can help keep your project more organized and focused (_i.e._ less interactive exploration)
-
---
-
-- .dark-blue[__Modularity__]
-  + Breaking your tasks into small digestible code chunks makes it easier to debug your code and easier to see how all of the parts fit together
-
---
-
-- .dark-blue[__Transparency and Reproducibility__]
-  + Out of the box, you get a transparent data analysis workflow which is easily reproducible 
-
---
-
-- .dark-blue[__Caching and History__]
-  + Re-running code that doesn't change is tedious and time-consuming. Caching results means you only run whats absolutely necessary to get up-to-date-results
-
---
-
-- .dark-blue[__Scalability and Parallel Computing__]
-  + Mental models of projects break down at scale. Building projects as workflows scales well and easily facilitates parallel computing
-
+```{r echo=FALSE}
+img(src = "imgs/4lp7k8.jpg", class = "w-50")
+```
 
 ---
 
-## `{targets}` etymology
+### Why should I use `{targets}`?
+
+- .f4[.dark-blue[__Organization__]
+  + Explicitly building your projects with as a cohesive pipeline keeps your project more organized and focused]
+
+--
+
+- .f4[.dark-blue[__Modularity__]
+  + Breaking your tasks into small digestible code chunks makes it easier to debug your code and easier to see how all of the parts fit together]
+
+--
+
+- .f4[.dark-blue[__Transparency and Reproducibility__]
+  + Out of the box, you get a transparent data analysis workflow which is easily reproducible]
+
+--
+
+- .f4[.dark-blue[__Caching and History__]
+  + Re-running code that doesn't change is tedious and time-consuming. Caching results means you only run whats absolutely necessary to get up-to-date-results]
+
+--
+
+- .f4[.dark-blue[__Scalability and Parallel Computing__]
+  + Mental models of projects break down at scale. Building projects as workflows scales well and easily facilitates parallel computing]
 
 ---
 
+class: center middle hide-count
 
-https://wlandau.github.io/targets/
+```{r echo=FALSE}
+knitr::include_graphics("imgs/infographic.svg")
+```
+
+---
+
+### Using `{targets}`
+
+- All functions in `{targets}` are prefixed by `tar_*`, which makes it easy to work with the package due to low cognitive burden
+
+--
+
+  - `tar_target()` - The unit of interest; targets are the building blocks of your pipeline and represent meaningful components of your project
+
+--
+
+  - `tar_pipeline()` - The complete set of all targets included in the analyze
+
+--
+
+  - `tar_option_set()` - Set global configuration options, such as default storage formats, packages, memory allocation, storage, deployment...etc.
+
+--
+
+  - `tar_make()` - This function will analyze your code/pipeline to understand the dependencies, and build the pipeline in a separate clean `R` session
+
+---
+
+class: middle
+
+```r
+tar_target(
+  name,
+  command,
+  pattern = NULL,
+  tidy_eval = targets::tar_option_get("tidy_eval"),
+  packages = targets::tar_option_get("packages"),
+  library = targets::tar_option_get("library"),
+  format = targets::tar_option_get("format"),
+  iteration = targets::tar_option_get("iteration"),
+  error = targets::tar_option_get("error"),
+  memory = targets::tar_option_get("memory"),
+  garbage_collection = targets::tar_option_get("garbage_collection"),
+  deployment = targets::tar_option_get("deployment"),
+  priority = targets::tar_option_get("priority"),
+  resources = targets::tar_option_get("resources"),
+  storage = targets::tar_option_get("storage"),
+  retrieval = targets::tar_option_get("retrieval"),
+  cue = targets::tar_option_get("cue")
+)
+```
+
+---
+
+class: middle
+
+```{r eval=FALSE}
+tar_target(
+  name, #<<
+  command, #<<
+  pattern = NULL,
+  tidy_eval = targets::tar_option_get("tidy_eval"),
+  packages = targets::tar_option_get("packages"),
+  library = targets::tar_option_get("library"),
+  format = targets::tar_option_get("format"),
+  iteration = targets::tar_option_get("iteration"),
+  error = targets::tar_option_get("error"),
+  memory = targets::tar_option_get("memory"),
+  garbage_collection = targets::tar_option_get("garbage_collection"),
+  deployment = targets::tar_option_get("deployment"),
+  priority = targets::tar_option_get("priority"),
+  resources = targets::tar_option_get("resources"),
+  storage = targets::tar_option_get("storage"),
+  retrieval = targets::tar_option_get("retrieval"),
+  cue = targets::tar_option_get("cue")
+)
+```
+
+---
+
+class: middle
+
+```r
+tar_option_set(
+  tidy_eval = NULL,
+  packages = NULL,
+  library = NULL,
+  envir = NULL,
+  format = NULL,
+  iteration = NULL,
+  error = NULL,
+  memory = NULL,
+  garbage_collection = NULL,
+  deployment = NULL,
+  priority = NULL,
+  resources = NULL,
+  storage = NULL,
+  retrieval = NULL,
+  cue = NULL,
+  debug = NULL
+)
+```
+
+---
+
+class: middle
+
+```r
+tar_option_set(
+  tidy_eval = NULL,
+* packages = NULL,
+  library = NULL,
+  envir = NULL,
+  format = NULL,
+  iteration = NULL,
+  error = NULL,
+  memory = NULL,
+  garbage_collection = NULL,
+  deployment = NULL,
+  priority = NULL,
+  resources = NULL,
+  storage = NULL,
+  retrieval = NULL,
+  cue = NULL,
+  debug = NULL
+)
+```
+
+---
+
+class: middle
+
+```r
+tar_pipeline(...)
+```
+
+- `tar_pipeline()` simply accepts an arbitrary number of `tar_target()` objects, or a list thereof.
+
+--
+
+Example:
+
+```r
+tar_pipeline(
+  tar_target(first, f1()),
+  tar_target(second, f2()),
+  tar_target(third, f3(first, second))
+)
+```
+
+- .b[Note:] The order of targets inside `tar_pipeline()` does NOT matter. `{targets}` is smart enough to infer the topology and learn dependencies
+
+---
+
+### `r fontawesome::fa("list")` A move away from imperative scripting
+
+```yaml
+run_everything.R
+R/
+├── 01-data.R
+├── 02-munge.R
+├── 03-model.R
+├── 04-results.R
+└── 05-plot.R
+data/
+└── customer_churn.csv
+```
+
+- Does not scale well to larger/complicated projects
+
+- You are in charge of storing/loading important objects
+
+- Everything needs to be ran every time
+
+---
+
+### `r fontawesome::fa("palette")` Guiding Design Principles
+
+> Defining good targets is more of an art than a science, and it requires personal judgement and context specific to your use case. 
+
+--
+
+- Generally speaking, a good target is...
+
+  1. Long enough to eat up a decent chunk of runtime, and
+
+  1. Small enough that `tar_make()` frequently skips it, and
+
+  1. Meaningful to your project, and
+
+  1. A well-behaved `R` object that can be stored.
+
+--
+
+- Building your plan
+
+  + A `{targets}` plan is a __directed acyclic graph__ that describes all of the tasks that need to be done and the interrelationships between these tasks
+
+---
+
+### `r fontawesome::fa("check-circle")` Think Functional
+
+> - Everything that exists is an object.  
+- Everything that happens is a function call. 
+
+> John Chambers
+
+- A key design consideration when working with `{targets}` is to embrace functions. 
+    + Try to abstract important tasks into functions that do a single obvious task
+
+- At first, this may seem like extra work, but the downstream payoff is huge
+
+--
+
+```r
+find_lung_cancers <- function(data, icd_code) {
+  # <<some R code>>
+  return(data_with_outcomes)
+}
+```
+```r
+find_lung_cancers(ukb, "C34")
+```
+
+---
+
+### `r fontawesome::fa("sitemap")` Suggested Project Structure
+
+- Everyone has their own preferred way of organizing their files and projects. This is only a suggested way based on my workflow using `{targets}` for building `R`-centric projects
+
+```r
+├── R/
+│   ├── functions.R
+├── _targets.R
+├── run.R
+├── project-name.Rproj
+```
+
+- A more mature project will likely have many more subdirectories and files, but this serves as the skeleton for most/all of my `{targets}` projects
+
+However,
+
+- `_targets.R` and `_targets/` must exist at the root of the project
+
+---
+
+class: middle
+
+```r
+├── R/
+*├── _targets.R
+├── run.R
+├── project-name.Rproj
+```
+
+```r
+# _targets.R
+library(targets)
+
+# Load functions
+source("functions.R")
+
+# Set global options
+tar_option_set(...)
+
+# Define targets/pipeline
+tar_pipeline(...)
+```
+
+---
+
+class: middle
+
+```r
+├── R/
+├── _targets.R
+*├── run.R
+├── project-name.Rproj
+```
+
+```r
+# run.R
+
+targets::tar_make()
+```
+
+---
+
+class: middle
+
+```r
+*├── R/
+├── _targets.R
+├── run.R
+├── project-name.Rproj
+```
+
+```r
+├── R/
+│   ├── clean-data.R
+│   ├── cv-splits.R
+│   ├── fit-model.R
+│   ├── summarize-results.R
+│   ├── build-report.R
+```
+
+- I find it best to have one script per function/task; name the script the name of the function it contains
+
+---
+
+class: middle
+
+```r
+*├── R/
+├── _targets.R
+├── run.R
+├── project-name.Rproj
+```
+
+```r
+├── R/
+*│   ├── clean-data.R
+│   ├── cv-splits.R
+│   ├── fit-model.R
+│   ├── summarize-results.R
+│   ├── build-report.R
+```
+
+```r
+# clean-data.R
+
+clean_data <- function(data) {
+  "<<some R code...>>"
+  return(data_clean)
+} 
+```
+
+---
+
+### `r fontawesome::fa("save")` `{targets}` data store
+
+- After you run your pipeline the first time the data store is created...
+
+--
+
+```r
+*_targets/
+*│   ├── meta/
+*│   ├── objects/
+*│       ├── target_name_1
+*│       ├── target_name_2
+├── R/
+├── _targets.R
+├── run.R
+├── project-name.Rproj
+```
+
+- It is not recommended to directly interact with the `_targets` directory. Instead, load and inspect the direction using the suite of available helper functions
+  + `tar_read()`/`tar_load()`
+  + `tar_meta()`
+  + Etc.
+
+---
+
+### `r fontawesome::fa("robot")` A simple example...
+
+---
+
+### `r fontawesome::fa("file-alt")` Depending on external files
+
+- Sometimes your pipeline might need to look outward and depend on "external" files
+  + A common example is depending on a CSV or Excel file
+
+--
+
+```r
+tar_pipeline(
+  tar_target(
+    ukb,
+    read_tsv("shared/UK Biobank/UKB_202006_Update/ukb42352.tab")
+  )
+)
+```
+
+---
+
+### `r fontawesome::fa("file-alt")` Depending on external files
+
+- Sometimes your pipeline might need to look outward and depend on "external" files
+  + A common example is depending on a CSV/Excel or PLINK file
+
+```r
+tar_pipeline(
+  tar_target(
+    ukb_file
+    "shared/UK Biobank/UKB_202006_Update/ukb42352.tab",
+    format = "file"
+  ),
+  tar_target(
+    ukb
+    read_tsv(ukb_file)
+  )
+)
+```
+
+---
+
+### `r fontawesome::fa("tree")` Dynamic branching
+
+> The `targets` packages supports shorthand to create large pipelines. Dynamic branching defines new targets (i.e. branches) while the pipeline is running, and those definitions can be based on prior results from upstream targets.
+
+__Patterns:__ Creates .i.blue[branches] based on combinations of arguments
+
+```r
+# Draws from random Normal
+tar_pipeline(
+  tar_target(size, seq(1, 1000, by = 100)),
+  tar_target(draws, rnorm(size), pattern = map(size))
+)
+```
+
+- By default, `targets` will aggregate each of the slices of `size` using `vctrs::vec_c()`. In this example, this will combine all of our draws into one single vector.
+
+---
+
+### `r fontawesome::fa("tree")` Dynamic branching
+
+__Iteration__: patterns iterate over targets, and there are two important aspects of iteration...
+
+1. Branching
+  + This tells `targets` how to iterate (or create branches) based on the data
+
+1. Aggregation
+  + This tells `targets` how to combine branches to form targets
+
+--
+
+- `iteration = "vector"` - branches are created with `vec_slice()` and aggregated with `vec_c()`
+
+- `iteration = "list"` - branches are created with `list[[]]` and aggregated with `list()`
+
+---
+
+### `r fontawesome::fa("project-diagram")` High-performance Computing
+
+.lh-copy[> `targets` supports high-performance computing with the `tar_make_clustermq()` and `tar_make_future()` functions. These functions are like `tar_make()`, but they allow multiple targets to run simultaneously over parallel workers. These workers can be processes on your local machine, or they can be jobs on a computing cluster. The main process automatically sends a target to a worker as soon as
+
+> 1. The worker is available, and
+1. All the target’s upstream dependency targets have been checked or built.
+]
+
+---
+
+class: center middle hide-count
+
+<script src="https://fast.wistia.com/embed/medias/ycczhxwkjw.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.21% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_ycczhxwkjw videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/ycczhxwkjw/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" onload="this.parentNode.style.opacity=1;" /></div></div></div></div>
+
+---
+
+### `r fontawesome::fa("project-diagram")` High-performance Computing
+
+- Assuming you have installed the `{clustermq}` package...enabling parallel processing of targets is as simple as...
+
+```r
+# Add this line to your _targets.R file
+options(clustermq.scheduler = "multiprocess")
+```
+
+```r
+# Instead of tar_make()
+targets::tar_make_clustermq(workers = 5)
+```
+
+- Keep in mind, these multiple persistent `R` processes are running locally, so a good rule-of-thumb is the number of processes should always be less than or equal to the number of available cores
+
+---
+
+### `r fontawesome::fa("project-diagram")` High-performance Computing
+
+- If your project lives on our cluster, you can change the scheduler to `"slurm"`, and `targets` will run the worker processes as jobs on the compute nodes
+
+```r
+# Add this line to your _targets.R file
+options(
+  clustermq.scheduler = "slurm",
+  clustermq.template = "/path/to/slurm_clustermq.tmpl"  
+)
+```
+
+- You also need to point `clustermq` toward a file which provides a template for submitting batch jobs
+
+--
+
+```r
+targets::tar_make_clustermq(workers = 5)
+```
+
+- Now these worker processes will run on compute nodes (caveat: currently few nodes actually support `ZeroMQ` but this should be made widely available next upgrade)
+
+---
+
+### Slurm Job Template
+
+- The values in double curly-braces will be automatically populated by `clustermq` when submitting the jobs
+  + You can also pass these (and other) options manually using the `resources` argument to `tar_option_set()`
+
+```bash
+#SBATCH --job-name={{ job_name }}
+#SBATCH --partition={{ partition | guest }}
+#SBATCH --nodelist={{ node | galen55 }}
+#SBATCH --output={{ log_file | /dev/null }}
+#SBATCH --error={{ log_file | /dev/null }}
+#SBATCH --mem-per-cpu={{ memory | 4096 }}
+#SBATCH --array=1-{{ n_jobs }}
+
+ulimit -v $(( 1024 * {{ memory | 4096 }} ))
+CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'
+```
+
+---
+
+### Topics I didn't cover...
+
+- Seamless integration with AWS/cloud storage capabilities
+  + You can store and load objects from AWS S3 buckets as if they existed locally
+  
+- Using the `{future}` backend for parallel computing (I personally prefer the `{clustermq}` backend)
+
+- `targets` offers lots of different storage formats, some of which are faster and more memory efficient
+
+- `tarchetypes` is a helper package that .i["is a collection of target and pipeline archetypes for the targets package"]
+
+- Lots more, this package is in rapid-development, though its current API is pretty stable as this package is preparing for peer-review and a subsequent CRAN release
+
+---
+
+.pull-left[
+### `r fontawesome::fa("question-circle")` Helpful Resources
+
+- [The targets R Package User Manual](https://wlandau.github.io/targets-manual/index.html)
+
+- [targets Website](https://wlandau.github.io/targets/)
+
+- [targets GitHub](https://github.com/wlandau/targets)
+
+- [tarchetypes Website](https://wlandau.github.io/tarchetypes/)
+]
+
+.pull-right[
+### `r fontawesome::fa("thumbs-up")` Acknolwedgements
+
+- Will Landau
+  + Author of `targets` and `drake`
+
+- Michael Schubert
+  + Author of `clustermq`
+]
+<br><br><br>
+.ba.pa3.br3.bg-yellow.f4.center[.b[Kohn's Second Law:] An experiment is reproducible until another laboratory tries to repeat it]
+<br><br>
+.ba.pa3.br3.bg-light-green.f4.center[.b[Matt's Second Law:] A statistical analysis is reproducible until you try to re-run it ~~years~~ days later]
