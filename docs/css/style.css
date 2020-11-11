@@ -105,3 +105,15 @@
 .drake-meme {
   width: 625px;
 }
+.fade {
+  opacity: 1;
+  animation: fader 1s ease-in-out 1.5s 1 forwards;
+}
+@keyframes fader {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
