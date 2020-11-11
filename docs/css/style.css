@@ -9,7 +9,7 @@
 
 /* TITLE SLIDE */
 .title-bg {
-  background-image: url(https://images.unsplash.com/photo-1506968430777-bf7784a87f23?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1502&q=80);
+  background-image: url(https://images.unsplash.com/photo-1477414348463-c0eb7f1359b6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80);
   background-size: cover;
 }
 .talk-title {
@@ -38,6 +38,7 @@
 .talk-date {
   color: var(--title-font-color);
   font-size: 1.5rem;
+  padding-top: 10px;
 }
 .sinai-blue {
   color: var(--sinai-blue);
@@ -81,7 +82,7 @@
     transform: translate(0px, 0px) scale(1);
   }
   100% {
-    transform: translate(-350px, -380px) scale(0.5);
+    transform: translate(-450px, -380px) scale(0.5);
   }
 }
 .appear {
@@ -99,7 +100,7 @@
 .drake-pic {
   position: absolute;
   width: 250px;
-  right: 250px;
+  right: 300px;
   bottom: 50px;
 }
 .drake-meme {
@@ -114,6 +115,17 @@
     opacity: 1;
   }
   100% {
-    opacity: 0.1;
+    opacity: 0.05;
+  }
+}
+.engorge {
+  animation: engorge 1s linear 2.5s 1 forwards;
+}
+@keyframes engorge {
+  0% {
+    font-size: inherit;
+  }
+  100% {
+    font-size: 25px;
   }
 }
