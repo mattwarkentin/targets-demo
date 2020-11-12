@@ -130,7 +130,7 @@
   }
 }
 .msl {
-  animation: msl 1s ease-in-out 5s 1 forwards;
+  animation: msl 1s ease-in-out 2s 1 forwards;
   opacity: 0;
 }
 @keyframes msl {
@@ -142,7 +142,7 @@
   }
 }
 .ksl {
-  animation: ksl 1s ease-in-out 5s 1 forwards;
+  animation: ksl 1s ease-in-out 2s 1 forwards;
   opacity: 1;
 }
 @keyframes ksl {
