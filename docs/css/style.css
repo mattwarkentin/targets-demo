@@ -153,3 +153,27 @@
     opacity: 0.3;
   }
 }
+.name-tip {
+  left: 200px;
+  top: 10px;
+}
+.command-tip {
+  left: 200px;
+  top: 160px;
+}
+.tip-reveal {
+  animation: tip-reveal 1s linear 1s 1 forwards;
+  opacity: 0;
+}
+@keyframes tip-reveal {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.pkg-tip {
+  left: 200px;
+  top: 40px;
+}
