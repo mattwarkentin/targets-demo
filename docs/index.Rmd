@@ -1139,6 +1139,8 @@ class: lh-copy
 - [targets GitHub](https://github.com/wlandau/targets)
 
 - [clustermq Website](https://mschubert.github.io/clustermq/)/[GitHub](https://github.com/mschubert/clustermq)
+
+- [`r fontawesome::fa("github")` Presentation repository](https://github.com/mattwarkentin/targets-demo)
 ]
 
 .pull-right[
