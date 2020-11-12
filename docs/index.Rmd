@@ -454,14 +454,13 @@ tar_pipeline(
 ### `r fontawesome::fa("list")` Imperative scripting
 
 ```yaml
-run_everything.R
 R/
 ├── 01-data.R
 ├── 02-clean.R
 ├── 03-fit-model.R
 ├── 04-summarize-results.R
 └── 05-tables-figs.R
-data/
+run_scripts.R
 ```
 
 --
@@ -498,29 +497,25 @@ data/
 
 ### `r fontawesome::fa("check-circle")` Think Functional
 
-> - Everything that exists is an object.  
-- Everything that happens is a function call.  
+- A key design consideration when working with `{targets}` is to embrace functions
 
-> John Chambers (creator of S)
-
---
-
-- A key design consideration when working with `{targets}` is to embrace functions. 
-    + Try to abstract important tasks into functions that do a single obvious task
+- Try to abstract important steps in your workflow into functions that do a single obvious task
 
 - At first, this may seem like extra work, but the downstream payoff is huge
 
 --
 
 ```r
-find_lung_cancers <- function(data, icd_code) {
+find_outcomes <- function(data, icd_code) {
   # <<some R code>>
   return(data_with_outcomes)
 }
 ```
 ```r
-find_lung_cancers(ukb, "C34")
+find_outcomes(ukb, "C34")
 ```
+
+- We now have a reusable function that is easy to maintain and use in our pipeline
 
 ---
 

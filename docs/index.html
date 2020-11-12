@@ -463,14 +463,13 @@ tar_pipeline(
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 512 512"&gt;&lt;path d="M80 368H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm0-320H16A16 16 0 0 0 0 64v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16V64a16 16 0 0 0-16-16zm0 160H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm416 176H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"/&gt;&lt;/svg&gt; Imperative scripting
 
 ```yaml
-run_everything.R
 R/
 ├── 01-data.R
 ├── 02-clean.R
 ├── 03-fit-model.R
 ├── 04-summarize-results.R
 └── 05-tables-figs.R
-data/
+run_scripts.R
 ```
 
 --
@@ -507,29 +506,25 @@ data/
 
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 512 512"&gt;&lt;path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/&gt;&lt;/svg&gt; Think Functional
 
-&gt; - Everything that exists is an object.  
-- Everything that happens is a function call.  
+- A key design consideration when working with `{targets}` is to embrace functions
 
-&gt; John Chambers (creator of S)
-
---
-
-- A key design consideration when working with `{targets}` is to embrace functions. 
-    + Try to abstract important tasks into functions that do a single obvious task
+- Try to abstract important steps in your workflow into functions that do a single obvious task
 
 - At first, this may seem like extra work, but the downstream payoff is huge
 
 --
 
 ```r
-find_lung_cancers &lt;- function(data, icd_code) {
+find_outcomes &lt;- function(data, icd_code) {
   # &lt;&lt;some R code&gt;&gt;
   return(data_with_outcomes)
 }
 ```
 ```r
-find_lung_cancers(ukb, "C34")
+find_outcomes(ukb, "C34")
 ```
+
+- We now have a reusable function that is easy to maintain and use in our pipeline
 
 ---
 
