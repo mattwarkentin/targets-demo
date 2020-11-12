@@ -162,7 +162,7 @@
   top: 160px;
 }
 .tip-reveal {
-  animation: tip-reveal 1s linear 1s 1 forwards;
+  animation: tip-reveal 1s ease-in 1s 1 forwards;
   opacity: 0;
 }
 @keyframes tip-reveal {
@@ -176,4 +176,11 @@
 .pkg-tip {
   left: 200px;
   top: 40px;
+}
+.video-label {
+  bottom: 10px;
+  left: 10px;
+}
+.read-load-tip {
+  width: 100px;
 }

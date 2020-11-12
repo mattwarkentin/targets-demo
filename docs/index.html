@@ -276,6 +276,8 @@ class: center middle hide-count
 
 &lt;img src="imgs/infographic.svg" width="100%" /&gt;
 
+.footnote.left[Infographic from https://docs.ropensci.org/drake/]
+
 ---
 
 class: lh-copy
@@ -292,7 +294,7 @@ class: lh-copy
 
 --
 
-  - `tar_pipeline()` - The complete set of all targets included in the analyze
+  - `tar_pipeline()` - The complete set of all targets are contained in the pipeline
 
 --
 
@@ -300,7 +302,7 @@ class: lh-copy
 
 --
 
-  - `tar_make()` - Analyzes your code/pipeline to understand the dependencies, and builds the pipeline in a separate clean `R` session
+  - `tar_make()` - Inspects your code/pipeline to understand the dependencies, and builds the pipeline in a separate clean `R` session
 
 ---
 
@@ -332,7 +334,7 @@ tar_target(
 
 class: middle
 
-<div class="name-tip w-30 absolute ba pa2 br3 z-1 tc bg-green white tip-reveal  shadow-4 bw1 b--black">A unique name given to a target. TIP: A common prefix can make it easier to refer to families of targets</div><div class="command-tip w-30 absolute ba pa2 br3 z-2 tc bg-blue white tip-reveal shadow-4 bw1 b--black">The R code that produces the target value</div>
+<div class="name-tip w-30 absolute ba pa2 br3 z-1 tc bg-green white tip-reveal  shadow-4 bw1 b--black">Unique name given to a target. TIP: A common prefix can make it easier to refer to families of targets</div><div class="command-tip w-30 absolute ba pa2 br3 z-2 tc bg-blue white tip-reveal shadow-4 bw1 b--black">R code that produces a target value</div>
 
 ```r
 tar_target(
@@ -385,7 +387,7 @@ tar_option_set(
 
 class: middle
 
-<div class="pkg-tip w-30 absolute ba pa2 br3 z-1 tc bg-red white tip-reveal shadow-4 bw1 b--black">A character vector of packages that will be loaded before building your pipeline</div>
+<div class="pkg-tip w-30 absolute ba pa2 br3 z-1 tc bg-red white tip-reveal shadow-4 bw1 b--black">Character vector of packages that will be loaded before building your pipeline</div>
 
 ```r
 tar_option_set(
@@ -464,12 +466,11 @@ tar_pipeline(
 run_everything.R
 R/
 ├── 01-data.R
-├── 02-munge.R
-├── 03-model.R
-├── 04-results.R
-└── 05-plot.R
+├── 02-clean.R
+├── 03-fit-model.R
+├── 04-summarize-results.R
+└── 05-tables-figs.R
 data/
-└── customer_churn.csv
 ```
 
 --
@@ -669,7 +670,7 @@ clean_data &lt;- function(data) {
 ├── project-name.Rproj
 ```
 
-- It is NOT recommended to directly interact with the `_targets` directory. Instead, load and inspect the data store using the suite of available helper functions
+- It is NOT recommended to directly interact with the `_targets/` directory. Instead, load and inspect the data store using the suite of available helper functions
 
 ---
 
@@ -730,7 +731,7 @@ _targets/
 class: middle
 
 ```r
-tar_read(data)
+tar_read(data) # compare with tar_load()
 ```
 ```r
   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
@@ -740,7 +741,7 @@ tar_read(data)
 ```
 
 ```r
-tar_read(model)
+tar_read(model) # compare with tar_load()
 ```
 ```r
 Call:
@@ -753,6 +754,8 @@ Coefficients:
           -0.3152            -0.7236            -1.0235  
 
 ```
+
+<div class="f5 ba pa1 br3 bg-light-yellow">.b[NOTE:] &lt;code&gt;tar_read()&lt;/code&gt; reads an object into memory, but the user must assign the object into a variable for persistence; &lt;code&gt;tar_load()&lt;/code&gt; reads and assigns the object into a variable of the same name.</div>
 
 ---
 
@@ -817,12 +820,12 @@ tar_pipeline(
 
 tar_pipeline(
   tar_target(
-    ukb_file
+    ukb_file,
     "shared/UK Biobank/UKB_202006_Update/ukb42352.tab",
     format = "file"
   ),
   tar_target(
-    ukb
+    ukb,
     read_tsv(ukb_file)
   )
 )
@@ -836,37 +839,41 @@ tar_pipeline(
 
 --
 
-.b[Patterns:] Creates .i.blue[branches] by iterating over function arguments
+.b[Patterns:] Creates .i.blue[branches] (i.e. sub-targets) by repeating a task over a set of arguments
 
 ```r
 # _targets.R
 
-# Draws from random Normal
+# Draws from random Normal of various sizes
 tar_pipeline(
   tar_target(size, seq(1, 1000, by = 100)),
   tar_target(draws, rnorm(size), pattern = map(size))
 )
 ```
 
-- By default, `targets` will aggregate each of the slices of `size` using `vctrs::vec_c()`. In this example, this will combine all of our draws into one single vector.
+- By default, `targets` will aggregate each of the sub-targets of `draws` using `vctrs::vec_c()`. In this example, this will combine all of our draws into one single vector.
+  + We could combine into a list by adding `iteration = "list"`, instead
 
 ---
 
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 384 512"&gt;&lt;path d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06 3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61 3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26 3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25 3.8-8.17 2.44-17.47-3.56-24.26z"/&gt;&lt;/svg&gt; Dynamic branching
 
-__Iteration__: patterns iterate over arguments (e.g. using `map()`), and there are two important aspects of iteration...
+.b[Iteration]: patterns repeat tasks and iterate over arguments (e.g. using `map()`), and there are two important aspects of iteration...
 
-1. Branching
-  + This tells `targets` how to iterate (or create branches) based on the data
+1. .b[Branching]
+  + How should `targets` slice the data when creating branches?
 
-1. Aggregation
-  + This tells `targets` how to combine branches to form targets
+1. .b[Aggregation]
+  + How should `targets` combine the results after completing branches?
 
 --
 
-- `iteration = "vector"` - branches are created with `vec_slice()` and aggregated with `vec_c()`
+&lt;hr&gt;
+- `iteration = "vector"`
+  + .f4[Branches are created with `vctrs::vec_slice(x, i)` and aggregated with `vctrs::vec_c(...)`]
 
-- `iteration = "list"` - branches are created with `list[[]]` and aggregated with `list()`
+- `iteration = "list"`
+  + .f4[Branches are created with `list[[i]]` and aggregated with `list(...)`]
 
 ---
 
@@ -881,7 +888,7 @@ class: lh-copy
 
 `$$lifeExpectancy = time + \epsilon$$`
 
-- After we will adjust our life expectancy model for GDP per capita
+- After, we will adjust our life expectancy model for GDP per capita
 
 ---
 
@@ -1030,11 +1037,13 @@ background-color: black
 
 &lt;script src="https://fast.wistia.com/embed/medias/ycczhxwkjw.jsonp" async&gt;&lt;/script&gt;&lt;script src="https://fast.wistia.com/assets/external/E-v1.js" async&gt;&lt;/script&gt;&lt;div class="wistia_responsive_padding" style="padding:56.21% 0 0 0;position:relative;"&gt;&lt;div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"&gt;&lt;div class="wistia_embed wistia_async_ycczhxwkjw videoFoam=true" style="height:100%;position:relative;width:100%"&gt;&lt;div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"&gt;&lt;img src="https://fast.wistia.com/embed/medias/ycczhxwkjw/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" onload="this.parentNode.style.opacity=1;" /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
 
+.white.video-label.absolute.f5[Illustrative video from https://wlandau.github.io/targets-manual/hpc.html]
+
 ---
 
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 512 512"&gt;&lt;path d="M480 160H32c-17.673 0-32-14.327-32-32V64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24z"/&gt;&lt;/svg&gt; High-performance Computing
 
-- Assuming you have installed the `{clustermq}` package...enabling parallel processing of targets is as simple as...
+- Assuming you have installed the `{clustermq}` R package...enabling parallel processing of targets is as simple as...
 
 ```r
 # Add this line to your _targets.R file
@@ -1104,6 +1113,8 @@ class: lh-copy
 - `targets` offers lots of different storage formats, some of which are faster and more memory efficient
 
 - `tarchetypes` is a helper package that .i["is a collection of target and pipeline archetypes for the targets package"]
+
+- Submitting HPC jobs using SSH - Develop locally and deploy remotely
 
 - Lots more, this package is in rapid-development, though its current API is pretty stable as this package is preparing for peer-review and a subsequent CRAN release
 
