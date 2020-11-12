@@ -162,7 +162,7 @@
   top: 160px;
 }
 .tip-reveal {
-  animation: tip-reveal 1s ease-in 1s 1 forwards;
+  animation: tip-reveal 1s ease-in 500ms 1 forwards;
   opacity: 0;
 }
 @keyframes tip-reveal {
@@ -181,6 +181,16 @@
   bottom: 10px;
   left: 10px;
 }
-.read-load-tip {
-  width: 100px;
+.penguins {
+  top: 20px;
+  left: 400px;
+}
+.bills {
+  top: 200px;
+  right: 85px;
+}
+.allison {
+  position: absolute;
+  top: 25px;
+  right: 25px;
 }
