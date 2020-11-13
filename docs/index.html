@@ -1098,13 +1098,10 @@ targets::tar_make_clustermq(workers = 6)
 
 ### &lt;svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 384 512"&gt;&lt;path d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm160-14.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"/&gt;&lt;/svg&gt; Slurm Job Template
 
-- The values in double curly-braces will be automatically populated by `clustermq` when submitting the jobs
-  + You can also pass these (and other) options manually using the `resources` argument to `tar_option_set()`
-
 ```bash
+# slurm_clustermq.tmpl
 #SBATCH --job-name={{ job_name }}
-#SBATCH --partition={{ partition }}
-#SBATCH --nodelist={{ node }}
+#SBATCH --partition=default
 #SBATCH --output={{ log_file | /dev/null }}
 #SBATCH --error={{ log_file | /dev/null }}
 #SBATCH --mem-per-cpu={{ memory | 4096 }}
@@ -1113,6 +1110,13 @@ targets::tar_make_clustermq(workers = 6)
 ulimit -v $(( 1024 * {{ memory | 4096 }} ))
 CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'
 ```
+.f4[
+- Values in double curly-braces will be automatically populated by `clustermq` (or fall back to default values, when available)
+    + Additional job options may be defined in this template (e.g. loading modules, activating environments)
+    + You may also choose to pass these wildcards using the `resources` argument to `tar_option_set()`
+
+- Other job schedulers are supported, including: LSF, SGE, PBS, Torque
+]
 
 ---
 

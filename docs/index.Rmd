@@ -1094,13 +1094,10 @@ targets::tar_make_clustermq(workers = 6)
 
 ### `r fontawesome::fa("file")` Slurm Job Template
 
-- The values in double curly-braces will be automatically populated by `clustermq` when submitting the jobs
-  + You can also pass these (and other) options manually using the `resources` argument to `tar_option_set()`
-
 ```bash
+# slurm_clustermq.tmpl
 #SBATCH --job-name={{ job_name }}
-#SBATCH --partition={{ partition }}
-#SBATCH --nodelist={{ node }}
+#SBATCH --partition=default
 #SBATCH --output={{ log_file | /dev/null }}
 #SBATCH --error={{ log_file | /dev/null }}
 #SBATCH --mem-per-cpu={{ memory | 4096 }}
@@ -1109,6 +1106,13 @@ targets::tar_make_clustermq(workers = 6)
 ulimit -v $(( 1024 * {{ memory | 4096 }} ))
 CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'
 ```
+.f4[
+- Values in double curly-braces will be automatically populated by `clustermq` (or fall back to default values, when available)
+    + Additional job options may be defined in this template (e.g. loading modules, activating environments)
+    + You may also choose to pass these wildcards using the `resources` argument to `tar_option_set()`
+
+- Other job schedulers are supported, including: LSF, SGE, PBS, Torque
+]
 
 ---
 
