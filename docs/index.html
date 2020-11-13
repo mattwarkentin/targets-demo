@@ -521,7 +521,7 @@ find_outcomes &lt;- function(data, icd_code) {
 }
 ```
 ```r
-find_outcomes(ukb, "C34")
+find_outcomes(my_data, "C34")
 ```
 
 - We now have a function that is easy to maintain and can be used in our `targets` pipeline
@@ -815,8 +815,8 @@ tar_make()
 
 tar_pipeline(
   tar_target(
-    ukb,
-    read_tsv("shared/UK Biobank/UKB_202006_Update/ukb42352.tab")
+    data,
+    read_csv("path/to/data.csv")
   )
 )
 ```
@@ -834,13 +834,13 @@ tar_pipeline(
 
 tar_pipeline(
   tar_target(
-    ukb_file,
-    "shared/UK Biobank/UKB_202006_Update/ukb42352.tab",
+    data_file,
+    "path/to/data.csv",
     format = "file"
   ),
   tar_target(
-    ukb,
-    read_tsv(ukb_file)
+    data,
+    read_csv(data_file)
   )
 )
 ```
@@ -853,7 +853,7 @@ tar_pipeline(
 
 --
 
-.b[Patterns:] Creates .i.blue[branches] (i.e. sub-targets) by repeating a task over a set of arguments
+.b[Patterns:] Creates .i[branches] (i.e. sub-targets) by repeating a task over a set of arguments
 
 ```r
 # _targets.R
@@ -1103,8 +1103,8 @@ targets::tar_make_clustermq(workers = 6)
 
 ```bash
 #SBATCH --job-name={{ job_name }}
-#SBATCH --partition={{ partition | guest }}
-#SBATCH --nodelist={{ node | galen55 }}
+#SBATCH --partition={{ partition }}
+#SBATCH --nodelist={{ node }}
 #SBATCH --output={{ log_file | /dev/null }}
 #SBATCH --error={{ log_file | /dev/null }}
 #SBATCH --mem-per-cpu={{ memory | 4096 }}
